@@ -1,5 +1,7 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import './App.css';
-import React , {useState} from 'react';
+import React, { useState } from 'react';
 // import axios from 'axios';
 
 // require('dotenv').config();
@@ -13,13 +15,14 @@ function App() {
     setInputValue(event.target.value);
   };
 
-  const search = async  () => {
+  const search = async (e) => {
     console.log(`Input value: ${inputValue}`);
-    let requestData = {  message: inputValue};
+    let requestData = { message: inputValue };
     // console.log(requestData);
     // console.log(API_BASE_URL);
-
+    
     try {
+      setInputValue('');
       const response = await fetch(`${API_BASE_URL}chat`, {
         method: 'POST',
         headers: {
@@ -45,27 +48,38 @@ function App() {
   const formatTextWithLineBreaks = (text) => {
     return text.replace(/\n/g, '<br />');
   };
-  
+
   return (
     <div className="App">
-      <input type='text' value={inputValue}
-        onChange={handleChange}
-        placeholder="Enter something"
-        />
-      <button className='searchBtn' onClick={search}> Search </button>
+      <div className='container-fluid'>
+        <div className='card'>
+          <div className='card-body'>
+            <div className='my-5 p-5'>
+              {data && (
+                <div className='text-start'>
+                  {/* <h2> Responses: </h2> */}
+                  {data.map((item, index) => {
 
-      {data && (
-        <div>
-            {/* <h2> Responses: </h2> */}
-            {data.map((item , index)=> {
-              
-              return (
-                <p key={index} dangerouslySetInnerHTML={{ __html: formatTextWithLineBreaks(item.text) }} />
-              );
-            })}
+                    return (
+
+                      <p className='' key={index} dangerouslySetInnerHTML={{ __html: formatTextWithLineBreaks(item.text) }} />
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+            <div class="input-group sticky-bottom">
+              <input type='text' className='form-control' value={inputValue}
+                onChange={handleChange}
+                placeholder="Enter something"
+              />
+              <button className='btn btn-dark searchBtn'  onClick={search} disabled={!inputValue}> <i className='fa-solid fa-paper-plane'></i> </button>
+            </div>
+
+
           </div>
-      )}
-            
+        </div>
+      </div>
     </div>
   );
 }
