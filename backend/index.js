@@ -1,5 +1,6 @@
 const express = require('express');
 const { CohereClientV2 } = require('cohere-ai');
+const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
@@ -9,14 +10,14 @@ const cohere = new CohereClientV2({
     token: process.env.COHERE_API_KEY,
   });
 
-
+  app.use(cors());
 // Middleware to parse JSON requests
 app.use(express.json());
 
 // Chatbot endpoint
 app.post('/chat', async (req, res) => {
+  console.log(req.body);
     const { message } = req.body;
-    // console.log(message);
   if (!message) {
     return res.status(400).json({ error: 'Message is required' });
   }
