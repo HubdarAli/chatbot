@@ -41,3 +41,27 @@
 .sticky-bottom {
   bottom:15px!important;
 }
+
+.response-container {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.response-text {
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  padding: 5px 10px;
+  background-color: #707271;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8em;
+}
