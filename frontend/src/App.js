@@ -9,6 +9,7 @@ function App() {
 
   const [inputValue, setInputValue] = useState();
   const [data, setData] = useState(null);
+  const [hoveredIndex, setHoveredIndex] = useState(null); // Track hovered item index
   const API_BASE_URL = 'http://localhost:3000/';
 
   const handleChange = (event) => {
@@ -46,9 +47,15 @@ function App() {
 
   // Replace newlines with <br />
   const formatTextWithLineBreaks = (text) => {
-    return text.replace(/\n/g, '<br />');
+    return text.replace(/\n/g, '</p><p>');
   };
 
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text)
+      .then(() => alert("Text copied to clipboard"))
+      .catch((err) => console.error("Failed to copy text: ", err));
+  };
+// onMouseEnter={() => setHoveredIndex(index)} onMouseLeave={() => setHoveredIndex(null)}
   return (
     <div className="App">
       <div className='container-fluid'>
@@ -58,13 +65,38 @@ function App() {
               {data && (
                 <div className='text-start'>
                   {/* <h2> Responses: </h2> */}
-                  {data.map((item, index) => {
+                  {/* {data.map((row, key) => {
+                    {row.text.split('\n\n').map((item, index) => {
 
-                    return (
+                      console.log(item);
+                      return (
 
-                      <p className='' key={index} dangerouslySetInnerHTML={{ __html: formatTextWithLineBreaks(item.text) }} />
-                    );
-                  })}
+                        <p  key={index}> {item} </p>
+                        
+                      );
+                    })};
+                    
+                  })} */}
+                  {data.map((row, rowIndex) => (
+                    row.text.split('\n\n').map((item, itemIndex) => (
+                      <div
+                        key={`${rowIndex}-${itemIndex}`}
+                        className="response-container"
+                        onMouseEnter={() => setHoveredIndex(`${rowIndex}-${itemIndex}`)}  // Set unique hover index
+                        onMouseLeave={() => setHoveredIndex(null)}                        // Reset hover index
+                      >
+                        <p className="response-text">{item}</p>
+                        {hoveredIndex === `${rowIndex}-${itemIndex}` && ( // Show button only if this <p> is hovered
+                          <button 
+                            className="copy-btn" 
+                            onClick={() => copyToClipboard(item)}
+                          >
+                            <i className='fa-regular fa-copy'></i>
+                          </button>
+                        )}
+                      </div>
+                    ))
+                  ))}
                 </div>
               )}
             </div>
