@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import './App.css';
-import React, { useState } from 'react';
+import React, { useState , useEffect  } from 'react';
 // import axios from 'axios';
 
 // require('dotenv').config();
@@ -10,6 +10,7 @@ function App() {
   const [inputValue, setInputValue] = useState();
   const [data, setData] = useState(null);
   const [hoveredIndex, setHoveredIndex] = useState(null); // Track hovered item index
+  const [copyText, setCopyText] = useState(false);
   const API_BASE_URL = 'http://localhost:3000/';
 
   const handleChange = (event) => {
@@ -45,14 +46,14 @@ function App() {
     }
   };
 
-  // Replace newlines with <br />
-  const formatTextWithLineBreaks = (text) => {
-    return text.replace(/\n/g, '</p><p>');
-  };
-
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text)
-      .then(() => alert("Text copied to clipboard"))
+      .then(() => {
+        setCopyText(hoveredIndex);
+        setTimeout(() => {
+          setCopyText(false);
+        }, 1000);
+      })
       .catch((err) => console.error("Failed to copy text: ", err));
   };
 // onMouseEnter={() => setHoveredIndex(index)} onMouseLeave={() => setHoveredIndex(null)}
@@ -91,7 +92,7 @@ function App() {
                             className="copy-btn" 
                             onClick={() => copyToClipboard(item)}
                           >
-                            <i className='fa-regular fa-copy'></i>
+                            {copyText === `${rowIndex}-${itemIndex}` ? <i className='fa fa-check'></i> : <i className='fa-regular fa-copy'></i>} 
                           </button>
                         )}
                       </div>
